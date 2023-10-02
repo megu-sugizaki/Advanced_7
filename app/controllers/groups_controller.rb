@@ -7,10 +7,10 @@ before_action :ensure_correct_user, only: [:edit, :update]
     end 
     
     def create
-    @group = Group.new(book_params)
-    @group.owner.id = current_user.id
+    @group = Group.new(group_params)
+    @group.owner_id = current_user.id
       if @group.save
-        redirect_to groups_path
+        redirect_to groups_path, method: :post
       else
         render 'new'
       end
@@ -19,11 +19,13 @@ before_action :ensure_correct_user, only: [:edit, :update]
     def index
       @book.new
       @groups = Group.all
+      @user = User.find(current_user.id)
     end 
     
     def show
       @group = Group.find(params[:id])
       @book = Book.new
+      @user = User.find(params[:id])
     end 
     
     def edit
@@ -40,12 +42,12 @@ before_action :ensure_correct_user, only: [:edit, :update]
    private
    
   def group_params
-    params.require(:group).permit(:title, :body, :image)
+    params.require(:group).permit(:title, :body, :group_image)
   end
   
   def ensure_correct_user
     @group = Group.find(params[:id])
-    unless @group.user == current_user
+    unless @group.owner_id == current_user.id
       redirect_to groups_path
     end
   end 
