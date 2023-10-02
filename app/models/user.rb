@@ -5,8 +5,11 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
 
   has_many :books
+  has_many :group_users
+  has_many :groups, through: :group_users
   has_many :book_comments, dependent: :destroy
   has_many :favorites, dependent: :destroy
+  has_many :GroupUsers, dependent: :destroy
   
   # 自分がフォローされる（被フォロー）側の関係性
   has_many :reverse_of_relationships, class_name: "Relationship", foreign_key: "followed_id", dependent: :destroy
