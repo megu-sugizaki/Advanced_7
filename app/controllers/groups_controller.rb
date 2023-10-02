@@ -17,15 +17,20 @@ before_action :ensure_correct_user, only: [:edit, :update]
     end 
     
     def index
-      @book.new
+      @book = Book.new
       @groups = Group.all
-      @user = User.find(current_user.id)
     end 
     
     def show
       @group = Group.find(params[:id])
       @book = Book.new
-      @user = User.find(params[:id])
+    end 
+    
+    def join
+      @group = Group.find(params[:group_id])
+      @group.users << current_user
+      # ↑group.usersにcurrent_userを追加
+      redirect_to groups_path
     end 
     
     def edit
@@ -42,7 +47,7 @@ before_action :ensure_correct_user, only: [:edit, :update]
    private
    
   def group_params
-    params.require(:group).permit(:title, :body, :group_image)
+    params.require(:group).permit(:name, :introduction, :image)
   end
   
   def ensure_correct_user
