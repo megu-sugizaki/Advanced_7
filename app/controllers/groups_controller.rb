@@ -9,6 +9,8 @@ before_action :ensure_correct_user, only: [:edit, :update]
     def create
     @group = Group.new(group_params)
     @group.owner_id = current_user.id
+    @users = @group.group_user.id
+    @group.users << current_user
       if @group.save
         redirect_to groups_path, method: :post
       else
@@ -42,6 +44,12 @@ before_action :ensure_correct_user, only: [:edit, :update]
       else
         render "edit"
       end
+    end 
+    
+    def destroy
+      @group = Group.find(params[:id])
+      @group.users.delete(current_user)
+      redirect_to groups_path
     end 
     
    private
