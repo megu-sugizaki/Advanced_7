@@ -14,7 +14,9 @@ Rails.application.routes.draw do
   	get 'followers' => 'relationships#followers', as: 'followers'
   end
   resources :groups, only: [:index, :show, :edit, :create, :update, :new] do
-    get "join" => "groups#join"
+    resource :group_users, only: [:create, :destroy]
+    get "new_mail" => "groups#new_mail"
+    get "send_mail" => "groups#send_mail"
   end
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
   get '/search', to: 'searches#search'
