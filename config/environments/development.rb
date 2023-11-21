@@ -83,7 +83,8 @@ Rails.application.configure do
       domain:                'gmail.com',
       user_name:             '*********@gmail.com',
       password:              '**** **** **** ****',
-      authentication:        'login',
+      authentication:        'plain',
+      # plain = pwを暗号化することなく送信
       enable_starttles_auto: true
     }
   

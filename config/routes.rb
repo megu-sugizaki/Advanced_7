@@ -15,8 +15,8 @@ Rails.application.routes.draw do
   end
   resources :groups, only: [:index, :show, :edit, :create, :update, :new] do
     resource :group_users, only: [:create, :destroy]
-    get "new_mail" => "groups#new_mail"
-    get "send_mail" => "groups#send_mail"
+    resources :event_notices, only: [:new, :create]
+    get "event_notices" => "event_notices#sent"
   end
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
   get '/search', to: 'searches#search'

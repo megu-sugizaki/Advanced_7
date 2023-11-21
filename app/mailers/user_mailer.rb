@@ -1,10 +1,25 @@
 class UserMailer < ApplicationMailer
     # modelのような役割?　ApplicationMailerの定義を継承したUserMailerで、おそらくmail_titleとかはdbのカラムのような役割をするのでは？
-    default from: 'notifications@example.com'
-    
-    def send_mail(mail_title, mail_content, group_users)
-        @mail_title = mail_title
-        @mail_content = mail_content
-        mail bcc: group_users.pluck(:email), subject: mail_title
-    end 
+    # おそらく、user_mailerのviewの中に入っているsend_notification.text.erb用のcontroller
+
+  def send_notification(member, event)
+      @group = event[:group]
+      @title = event[:title]
+      @body = event[:body]
+      
+      @mail = UserMailer.new()
+      mail(
+          from :ENV['MAIL_ADDRESS'],
+          to: member.email,
+          subject: 'New Event Notice!!'
+          )
+  end 
+  
+  def self.send_notifications_to_group(event)
+      group = event[:group]
+      group.users.each do |member|
+           UserMailer.send_notification(member, event).deliver.now
+      end 
+  end 
+
 end
